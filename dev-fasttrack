@@ -1,0 +1,84 @@
+Development
+Here are documented all the steps did by me from zero point until a commit of a patch to review.
+I am using Fedora 29 for this steps.
+
+Build Environment
+  sudo dnf install make gyp zlib ninja-build glibc glibc-devel libstdc++ libstdc++-devel gcc-c++
+
+  References
+    https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Building
+
+Start
+  sudo dnf install mercurial
+  hg clone https://hg.mozilla.org/projects/nspr
+  hg clone https://hg.mozilla.org/projects/nss
+
+  References
+    https://developer.mozilla.org/pt-BR/docs/Mozilla/Projects/NSS/NSS_Sources_Building_Testing
+
+Building
+  This process used to take about 1 minute or less.
+  nss/build.sh
+
+  freebl_gtest
+    As we can see in nss/nss.gyp and nss/build.sh, some binaries are not compiled by default.
+    freebl_gtest if one of them. If you want to test it, use:
+    nss/build.sh --test
+
+Testing - Complete
+  This could take some hours. So, be patient.
+  HOST=localhost DOMSUF=localdomain nss/tests/all.sh
+
+  During the tests, some interesting way to follow is here:
+    cd tests_results
+    watch -d "grep FAILED security/localhost.1/output.log | nl"
+
+  You can check the results here:
+    cd tests_results ; ls
+    less security/localhost.1/output.log
+    grep FAILED security/localhost.1/output.log
+
+  Pay attention for this points. More datails in References.
+    - IPv6
+    - DNS
+    - export USE_64=1
+
+  Testing - Specific
+    As the complete tests are a quite long, you can save time testing something more specific, like this example:
+    nss/tests/gtests/gtests.sh
+
+Preparing to Contribute
+  sudo dnf install php php-json git
+  mkdir -p ~/.mozbuild
+  cd ~/.mozbuild
+  git clone https://github.com/phacility/arcanist.git
+  git clone https://github.com/phacility/libphutil.git
+
+  mkdir -p ~/.mozbuild/moz-phab
+  cd ~/.mozbuild/moz-phab
+  curl -O https://raw.githubusercontent.com/mozilla-conduit/review/$(basename $(curl -sLo /dev/null -w '%{url_effective}' https://github.com/mozilla-conduit/review/releases/latest))/moz-phab
+  chmod +x moz-phab
+
+  echo 'export PATH="$HOME/.mozbuild/arcanist/bin:$HOME/.mozbuild/moz-phab:$PATH"' >> ~/.profile
+  arc -h
+  moz-phab -h
+
+Fix and Commit
+  hg config --edit    # to define your Name and E-mail.
+  hg status           # to review what was modified.
+  hg commit -m "Message"
+    Example: hg commit -m "Bug 1509432 - Removed duplicated code between mp_set_int and mp_set_ulong. Created a gtest for this functions."
+
+Send to Phabricator
+  moz-phab
+    YES
+
+  Review the output and check on Phabricator:
+    https://phabricator.services.mozilla.com/D25942
+
+  Study
+    https://github.com/mozilla-conduit/review/blob/master/README.md
+
+  References
+    https://moz-conduit.readthedocs.io/en/latest/phabricator-user.html
+    https://moz-conduit.readthedocs.io/en/latest/arcanist-linux.html
