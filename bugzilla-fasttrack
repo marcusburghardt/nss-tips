@@ -1,0 +1,25 @@
+This document should help to accelerate the arrival of new contributors for Bugzilla.
+I was more used to work with Infranstructure and private Dev Projects.
+Here are some fasttrack tips and concepts for a faster use of Bugzilla.
+
+Most Important:
+- An Open Source project has almost all the requests (bug, improvements, etc) made by Bugzilla.
+- If you want to contribute with code, this is the best (maybe the only) place to do that.
+- In a Open Source project, you have access according with meritocracy
+  - Everyone can file a bug.
+  - If you are competent to create a patch, you surelly can work on that and ask for a review.
+    - The idea here is review your code. The reviewers usually are very busy to teach you. So, you HAVE to read and learn most by yourself.
+- Some basic informations and general discussions should be done by comments, in the bug page. Not in e-mails, git or any other tool.
+- When you send a patch, a reviewer will comment it in the Phabricator (I will talk later).
+- If your code fit the quality and efficiency criteria, it will be approved to be landed (committed to the main repo). 
+
+First Steps
+1 - Look for bugs "good-fist-bugs": https://bugzilla.mozilla.org/buglist.cgi?keywords=good-first-bug
+2 - Choose one and prepare the environment, as explained in "dev-fasttrack" file.
+3 - Work in a patch and test locally. Take a look in the "mercurial-fasttrack" to help you here.
+4 - Only when you are pretty sure the the patch is good, commit locally using a reasonable comment.
+     - EX: "Bug 1509432 - Removed duplicated code between mp_set_int and mp_set_ulong. Created a gtest for this functions. r=<revisor, if already existing>"
+5 - Then, you can send for a review using moz-phab.
+6 - Pay attention in your e-mails. You will be informed when some reviewer put some message.
+7 - Sometimes you will need to improve or redo something. If this happen, be confident with "hg" commands. See mercurial-fasttrack. I put some good tips there.
+8 - If your code is ok, the reviewer will accept it, test and land. : )

@@ -1,0 +1,106 @@
+I create this document during my first adventures with Mercurial during the Bugfix.
+With this document, I hope to help other interested people to get involved faster with smaller knowledge-curve.
+
+Good Documentations to read:
+1 - https://www.mercurial-scm.org/wiki/UnderstandingMercurial (don't worry about the sublinks now. You first need the basic concepts and some experience before).
+2 - https://www.mercurial-scm.org/wiki/Tutorial
+
+https://www.mercurial-scm.org/learn
+
+Concepts:
+ChangeSet:
+- Is the global identification of a specific group of modifications (commit). Each changeset (cset) is identified by your ChangeSet ID.
+- Is the number after the colon from changeset line.
+- https://www.mercurial-scm.org/wiki/ChangeSet
+
+Revision Number:
+- The same concept of ChangeSet, but applied locally (only on your machine repo).
+- Is the number before the colon from changeset line.
+
+Parents:
+- Usually a commit has one parent. But it can has two also.
+- If is the first commit, no parent, represented by "-1:0000..."
+
+For commits, lets insert our identification:
+vim ~/.hgrc
+ [ui]
+ username = Marcus Burghardt <marcus.apb@gmail.com>
+
+Commands:
+hg help <comand>
+ - Get detailed informations about a command:
+
+hg --debug tags
+ - Display changeset IDs:
+
+hg log [-v] [--debug] [-r<revision number>]
+ - Displays informations about the commits.
+
+hg log -r1 -p
+ - This command is nice. It shows the patches associated with the changeset.
+
+hg log --graph
+ - Useful to see heads.
+
+hg tip
+ - Is a shortcut to "hg log -r tip" and shows the newest changeset in the repository.
+
+hg par
+ - Shows the parents of the working directory.
+
+hg head
+ - Refers to a local indentification of a specific modification. It is more useful when working alone and locally.
+
+hg summary
+ - Shows the current version of a branch.
+
+hg clone <source repo> <dest repo>
+ - Its really cheap to clone repos with Mercurial. So, this is a very useful approach.
+ - We can, for instance, clone one repo for each BUG that we are working. This makes the things simpler because you can be concentrated in one BUG per time.
+ - This helps also the use of commits.
+
+hg status
+ - This shows the status of files in your repo, before a commit.
+ - "?" symbol means "not tracked" by Mercurial.
+ - hg status -mard
+
+hg diff
+ - Another very useful command. As status show the files, diff shows what was chenged in each file. Awesome, right? : )
+
+hg revert <file>
+ - If you really would like to discard the last modifications and retry something better, use this command.
+ - It will rename the current file to <file>.orig and restore the <file>.
+ - If you change your mind, you can just rename the file with the SO commands. (rm <file> ; mv <file>.orig <file>)
+
+hg rollback
+ - Will undo the last action. Interesting in some cases.
+
+hg commit
+ - Are used to create a new changeset.
+ - You can also use "hg ci" from "check-in". : )
+
+hg pull [other repo]
+ - Very common command, used to download the new changesets from some place. If not informed the repo, will get from the original one.
+ - Observe that command does not update the files in the working directory. It just download the new changesets and you can do what you want with them.
+
+hg update
+ - If yum want to update your working direcory files with the "tip" changeset, use this command.
+ - Normally this command comes after the "pull".
+
+hg export tip > <name>.hg_export
+ - Useful if you want share your changeset without a centralized server. Maybe something more critical or for testing.
+
+hg import
+ - Used to import a changeset exported by hg export.
+
+hg merge
+ - Useful when you want to get updates from a collegue, for example, and join in your working directory.
+ - After merge, commit and take a look with the "hg log --graph"
+ - hg merge --abort will disrcard the uncommitted merge.
+
+hg annotate <file>
+ - Great command to see the source of modifications in a fila after a merge.
+  
+hg commit --amend
+ - Very useful when you do a fix, send and receive a feedback to improve or add something. The next send will carry on only the last modifictions. This is not nice!
+ - We need an commit with the complete resolution of a bug. This command put all together.

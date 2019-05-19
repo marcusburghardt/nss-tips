@@ -1,6 +1,7 @@
 Development
 Here are documented all the steps did by me from zero point until a commit of a patch to review.
 I am using Fedora 29 for this steps.
+This file is in continuous improvement.
 
 Build Environment
   sudo dnf install make gyp zlib ninja-build glibc glibc-devel libstdc++ libstdc++-devel gcc-c++
@@ -48,7 +49,7 @@ Testing - Complete
     nss/tests/gtests/gtests.sh
 
 Preparing to Contribute
-  sudo dnf install php php-json git
+  sudo dnf install php php-json git clang
   mkdir -p ~/.mozbuild
   cd ~/.mozbuild
   git clone https://github.com/phacility/arcanist.git
@@ -59,13 +60,26 @@ Preparing to Contribute
   curl -O https://raw.githubusercontent.com/mozilla-conduit/review/$(basename $(curl -sLo /dev/null -w '%{url_effective}' https://github.com/mozilla-conduit/review/releases/latest))/moz-phab
   chmod +x moz-phab
 
-  echo 'export PATH="$HOME/.mozbuild/arcanist/bin:$HOME/.mozbuild/moz-phab:$PATH"' >> ~/.profile
+  echo 'export PATH="$HOME/.mozbuild/arcanist/bin:$HOME/.mozbuild/moz-phab:$PATH"' >> ~/.bash_profile
   arc -h
   moz-phab -h
 
 Fix and Commit
   hg config --edit    # to define your Name and E-mail.
   hg status           # to review what was modified.
+
+Before committing, always check if your code is in clang-format. The best way do check is with "mach":
+  nss/mach clang-format
+If using VIM, do this to facilitate your life:
+  vim ~/.vimrc
+  "http://clang.llvm.org/docs/ClangFormat.html#vim-integration
+  map <C-K> :pyf /usr/share/clang/clang-format.py<cr>
+  imap <C-K> <c-o>:pyf /usr/share/clang/clang-format.py<cr>
+Whit this, you can just press "CTRL+K" to adjust the line.
+ References:
+ https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Coding_Style/Formatting_C++_Code_With_clang-format
+
+Now you can commit
   hg commit -m "Message"
     Example: hg commit -m "Bug 1509432 - Removed duplicated code between mp_set_int and mp_set_ulong. Created a gtest for this functions."
 
@@ -78,6 +92,11 @@ Send to Phabricator
 
   Study
     https://github.com/mozilla-conduit/review/blob/master/README.md
+
+  Have to read
+  https://chromium.googlesource.com/chromium/src/+/master/styleguide/c++/c++.md
+  https://mozilla.github.io/geckoview/tutorials/contributing-to-mc.html
+    - ./mach bootstrap - will offer to set up a commit hook that will automatically do this for you.
 
   References
     https://moz-conduit.readthedocs.io/en/latest/phabricator-user.html
