@@ -1,16 +1,27 @@
+nss-tips
+=========
+Since 2019-09-17 I published an Ansible Role for NSS intended to automate all the preccess
+to prepare new development environment. So, this repo may not be updated anymore.
+
+To see the Ansible Role:
+- https://galaxy.ansible.com/marcusburghardt/ansible_role_nss
+
+
 Development
 Here are documented all the steps did by me from zero point until a commit of a patch to review.
-I am using Fedora 29 for this steps.
+I am using Fedora 30 for this steps.
 This file is in continuous improvement.
 
 Build Environment
-  sudo dnf install make gyp zlib ninja-build glibc glibc-devel libstdc++ libstdc++-devel gcc-c++
+  sudo dnf install -y make gyp zlib ninja-build glibc glibc-devel glibc-devel.i686 libstdc++ libstdc++-devel gcc-c++ zlib-devel mercurial php php-json git clang docker liblsan libasan libtsan libubsan ltrace strace clang-analyzer
 
   References
     https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Building
 
 Start
-  sudo dnf install mercurial
+  #sudo dnf install mercurial
+  mkdir -p ~/MOZILLA
+  cd ~/MOZILLA
   hg clone https://hg.mozilla.org/projects/nspr
   hg clone https://hg.mozilla.org/projects/nss
 
@@ -21,10 +32,10 @@ Building
   This process used to take about 1 minute or less.
   nss/build.sh
 
-  freebl_gtest
-    As we can see in nss/nss.gyp and nss/build.sh, some binaries are not compiled by default.
-    freebl_gtest if one of them. If you want to test it, use:
-    nss/build.sh --test
+  #freebl_gtest
+  #  As we can see in nss/nss.gyp and nss/build.sh, some binaries are not compiled by default.
+  #  freebl_gtest if one of them. If you want to test it, use:
+  #  nss/build.sh --test
 
 Testing - Complete
   This could take some hours. So, be patient.
@@ -48,12 +59,16 @@ Testing - Complete
     As the complete tests are a quite long, you can save time testing something more specific, like this example:
     nss/tests/gtests/gtests.sh
 
+  Tips:
+  ../dist/Debug/bin/ssl_gtest -d . -w --gtest_filter"*OrderSet*"
+
 Preparing to Contribute
-  sudo dnf install php php-json git clang
+  #sudo dnf install php php-json git clang
   mkdir -p ~/.mozbuild
   cd ~/.mozbuild
   git clone https://github.com/phacility/arcanist.git
   git clone https://github.com/phacility/libphutil.git
+  # UPDATE ANSIBLE
 
   mkdir -p ~/.mozbuild/moz-phab
   cd ~/.mozbuild/moz-phab
@@ -94,6 +109,7 @@ Send to Phabricator
     https://github.com/mozilla-conduit/review/blob/master/README.md
 
   Have to read
+  https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Developer_Tutorial # GOOD
   https://chromium.googlesource.com/chromium/src/+/master/styleguide/c++/c++.md
   https://mozilla.github.io/geckoview/tutorials/contributing-to-mc.html
     - ./mach bootstrap - will offer to set up a commit hook that will automatically do this for you.
@@ -101,3 +117,27 @@ Send to Phabricator
   References
     https://moz-conduit.readthedocs.io/en/latest/phabricator-user.html
     https://moz-conduit.readthedocs.io/en/latest/arcanist-linux.html
+
+Try-Server
+https://wiki.mozilla.org/ReleaseEngineering/TryServer
+
+
+# Post to Phabricator without a bug
+arc diff
+
+# Update a code
+arc diff --preview 
+
+
+https://google.github.io/styleguide/cppguide.htm
+https://moz-conduit.readthedocs.io/en/latest/phabricator-user.html
+
+
+Fedora:
+
+.hgrc:
+[extensions]
+strip =
+
+.hg/requires
+sparserevlog

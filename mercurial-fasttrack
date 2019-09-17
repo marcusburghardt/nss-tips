@@ -72,8 +72,15 @@ hg revert <file>
  - It will rename the current file to <file>.orig and restore the <file>.
  - If you change your mind, you can just rename the file with the SO commands. (rm <file> ; mv <file>.orig <file>)
 
-hg rollback
+hg rollback (deprecated)
  - Will undo the last action. Interesting in some cases.
+
+hg backout
+ - Will reverse the changeset.
+
+hg strip #changeset# --keep
+ - You can remove changesets and their descendants.
+ - --keep will maintain the file changes of the removed changeset in the working direcory.
 
 hg commit
  - Are used to create a new changeset.
@@ -97,6 +104,12 @@ hg merge
  - Useful when you want to get updates from a collegue, for example, and join in your working directory.
  - After merge, commit and take a look with the "hg log --graph"
  - hg merge --abort will disrcard the uncommitted merge.
+ - https://stackoverflow.com/questions/5807547/why-do-i-sometimes-need-to-merge-after-a-pull-rather-than-simply-updating
+ - http://hgbook.red-bean.com/read/a-tour-of-mercurial-merging-work.html
+
+hg rebase -s <source changeset> -d <destination/tip changeset>
+  - https://stackoverflow.com/questions/2672351/hg-how-to-do-a-rebase-like-gits-rebase
+  - You can rebase with merge. Example: hg merge <last changeset after the pull>
 
 hg annotate <file>
  - Great command to see the source of modifications in a fila after a merge.
